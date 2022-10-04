@@ -92,6 +92,7 @@ class Creature(Card):
 				else:
 					target[i].take_damage(total_damage)
 					total_damage = 0
+				i += 1
 			if total_damage > 0 and len(target) > 0:
 				target[-1].take_damage(total_damage)
 		else:
@@ -117,15 +118,15 @@ class Player(object):
 	def mulligan(self, put_on_bottom):
 		random.shuffle(self.deck)
 		self.draw(7)
-		self.hand = [
-			Card.get_card("Orazca Frillback"),
-			Card.get_card("Garruk's Gorehorn"),
-			Card.get_card("Bear Cub"),
-			Card.get_card("Treetop Warden"),
-			Card.get_card("Forest"),
-			Card.get_card("Forest"),
-			Card.get_card("Forest")
-		]
+		# self.hand = [
+		# 	Card.get_card("Orazca Frillback"),
+		# 	Card.get_card("Garruk's Gorehorn"),
+		# 	Card.get_card("Bear Cub"),
+		# 	Card.get_card("Treetop Warden"),
+		# 	Card.get_card("Forest"),
+		# 	Card.get_card("Forest"),
+		# 	Card.get_card("Forest")
+		# ]
 		# TODO: add london mulligan
 
 	def take_damage(self, damage: int):
@@ -143,10 +144,22 @@ class Battlefield(object):
 		self.creatures: List[Creature] = []
 		self.graveyard: List[Card] = []
 	
+	def __str__(self):
+		s = "Creatures:\n"
+		s += str([creature for creature in self.creatures]) + "\n"
+		s += "Lands:\n"
+		s += str([land for land in self.lands]) + "\n"
+		s += "Graveyard:\n"
+		s += str([card for card in self.graveyard]) + "\n"
+		return s
+
+	__repr__ = __str__
+
 	def play_land(self, card: Land):
 		self.lands.append(card)
 	
 	def get_available_mana(self):
+		print("get_available_mana:")
 		print([land for land in self.lands])
 		return len([land for land in self.lands if not land.tapped])
 	
