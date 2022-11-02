@@ -20,7 +20,14 @@ class Card(object):
 		return isinstance(other, Card) and self.name == other.name
 	__repr__ = __str__
 
-	
+	@staticmethod
+	def get_card(name):
+		card_type = CARDS[name]["type"]
+		if card_type == Type.CREATURE:
+			return Creature(name)
+		elif card_type == Type.LAND:
+			return Land(name)
+
 	def tap(self):
 		success = not (self.tapped)
 		self.tapped = True
