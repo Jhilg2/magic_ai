@@ -1,12 +1,11 @@
-from re import L
-
-from numpy import False_
-from card import Battlefield, Creature, Land, Player
-from card import Card
-from card import Type
 from copy import deepcopy
-from typing import List
 from itertools import chain, combinations
+from typing import List
+
+from card import Creature, Land, Card
+from constants import Type
+from player import Player
+from battlefield import Battlefield
 
 def main():
 	player1 = Player()
