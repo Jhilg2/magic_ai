@@ -5,8 +5,9 @@ from card import Card
 
 class Player(object):
 
-	def __init__(self):
+	def __init__(self, name):
 		super(Player, self).__init__()
+		self.name = name
 		self.life = 20
 		self.deck = self._deck()
 		self.hand = []

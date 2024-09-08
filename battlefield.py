@@ -24,8 +24,8 @@ class Battlefield(object):
 		self.lands.append(card)
 	
 	def get_available_mana(self):
-		print("get_available_mana:")
-		print([land for land in self.lands])
+		# print("get_available_mana:")
+		# print([land for land in self.lands])
 		return len([land for land in self.lands if not land.tapped])
 	
 	def play_creature(self, card: Creature):
@@ -33,7 +33,7 @@ class Battlefield(object):
 			return False
 		self.creatures.append(card)
 		self.tap_lands(card.cost())
-		print(self.creatures)
+		# print(self.creatures)
 	
 	def tap_lands(self, lands_to_tap: int):
 		x = lands_to_tap
@@ -42,7 +42,7 @@ class Battlefield(object):
 				x -= 1
 
 	def get_attacks(self):
-		return [card for card in self.creatures if card.summoning_sick]
+		return [card for card in self.creatures if not card.summoning_sick]
 
 	def attack(self, attack_array: List[Creature]) -> int:
 		damage = []

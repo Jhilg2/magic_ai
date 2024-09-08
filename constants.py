@@ -1,5 +1,7 @@
 from enum import Enum
 
+TURN_LIMIT: int = 5
+
 class Phase(Enum):
     PLAY = 0
     ATTACK = 1

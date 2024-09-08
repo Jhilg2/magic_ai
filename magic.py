@@ -1,45 +1,54 @@
+import sys
 from copy import deepcopy
 from itertools import chain, combinations
 from typing import List
 
 from card import Creature, Land, Card
-from constants import Type
+from constants import Type, TURN_LIMIT
 from player import Player
 from battlefield import Battlefield
 
-def main():
-	player1 = Player()
-	player2 = Player()
+from utilities import clear_line
 
-	count = 0
+def main():
+	player1 = Player("Jack")
+	player2 = Player("Samantha")
+
 	# player1.battlefield.play_land(Land("Forest"))
 	# player1.battlefield.play_land(Land("Forest"))
 	# player1.battlefield.play_land(Land("Forest"))
 	# player1.battlefield.play_land(Land("Forest"))
-	while(count < 5):
-		print("======== Turn " + str(count) + " begins ========")
-		print(False if count == 0 else True)
-		starting_phase(player1, False if count == 0 else True)
-		print("Player 1's hand")
-		display_cards(player1.hand)
+	for turn in range(TURN_LIMIT):
+		print("======== Turn " + str(turn) + " begins ========")
+
+		# Starting player doesn't draw a card at the beginning of their turn
+		starting_phase(player1, False if turn == 0 else True)
+		
+		display_board(player1, player2)
 		play_cards(player1)
 		attacks = attack(player1.battlefield)
 		blocks = block(player2.battlefield, attacks)
 		damage(player2, attacks, blocks)
 		clean_up([player1, player2])
 	
-		starting_phase(player2, True)
-		print("Player 2's hand")
-		display_cards(player2.hand)
+		starting_phase(player2)
+		display_board(player2, player1)
+		# print("Player 2's hand")
+		# display_cards(player2.hand)
 		play_cards(player2)
 		attacks = attack(player2.battlefield)
 		blocks = block(player1.battlefield, attacks)
 		damage(player1, attacks, blocks)
 		clean_up([player2, player1])
-		count += 1
 		
-
-
+def display_board(active_player, defending_player):
+	print(f"{defending_player.name}'s Battlefield")
+	print(f"{defending_player.battlefield}")
+	print(f"{active_player.name}'s Battlefield")
+	print(f"{active_player.battlefield}")
+	print("Your hand:")
+	print(f"{active_player.hand}")
+	return 6
 
 def clean_up(players: List[Player]):
 	for player in players:
@@ -60,7 +69,7 @@ def damage(player: Player, attacks: List[Creature], blocks: List[List[Creature]]
 			for blocker in blocks[i]:
 				blocker.deal_damage(attacks[i])
 
-def starting_phase(player: Player, draw: bool = False):
+def starting_phase(player: Player, draw: bool = True):
 	if draw:
 		player.draw(1)
 	player.battlefield.untap_step()
@@ -99,6 +108,8 @@ def get_valid_plays(player: Player, played_land: bool):
 
 def attack(battlefield: Battlefield) -> List[Creature]:
 	creatures = [creature for creature in battlefield.creatures if not creature.tapped and not creature.summoning_sick] #TODO Maybe move into Battlefield?
+	if len(creatures) == 0:
+		return []
 	print("cards without summoning sickness")
 	display_cards(creatures, True)
 	indices_string = input("Input the array selecting creatures to attack with ('0,1,4,5'): ")
